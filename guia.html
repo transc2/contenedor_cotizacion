@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Envío - TransCano</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        header {
+            text-align: center;
+            position: relative;
+        }
+        #logo {
+            max-width: 175px; /* Tamaño del logo */
+            position: absolute;
+            left: 20px; /* Alineación izquierda */
+            top: 0px; /* Alineación superior */
+        }
+        
+        h1 {
+            color: #FFC107;
+            margin-top: 35px; /* Espacio superior para el título */
+            margin-bottom: 5px; /* Espacio inferior para el título */
+        }
+        h2 {
+            color: #000;
+            margin-top: 10px; /* Espacio superior para el subtítulo */
+            font-size: 18px; /* Ajustar el tamaño del subtítulo */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #faca3a;
+            padding: 10px;
+            text-align: left;
+        }
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px; /* Tamaño de la marca de agua incrementado */
+            opacity: 0.1;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        .section-title {
+            background-color: #faca3a;
+            color: #000;
+        }
+        .actions {
+            text-align: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #faca3a;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #ffca28;
+        }
+        .signature-section {
+            margin-top: 40px; /* Espacio para la sección de firma */
+            text-align: center; /* Centrando la sección de firma */
+        }
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            #logo {
+                max-width: 100px; /* Tamaño del logo en dispositivos pequeños */
+            }
+            h1 {
+                font-size: 22px; /* Ajustar tamaño del título */
+            }
+            h2 {
+                font-size: 16px; /* Ajustar tamaño del subtítulo */
+            }
+            th, td {
+                font-size: 14px; /* Ajustar tamaño de fuente en la tabla */
+                padding: 8px; /* Ajustar padding en celdas */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <img src="logo.jpg" alt="Logo de la Empresa" id="logo">
+        <h1>Importadora TransCano </h1>
+
+        <h2>Venta de maquinaria y servicios mecánicos</h2>
+    </header>
+    <img src="logo.jpg" class="watermark" alt="Marca de Agua">
+        
+    <table id="tabla">
+        <tr>
+            <th class="section-title" colspan="2">PROCEDENCIA</th>
+            <th class="section-title" colspan="2">DESTINO</th>
+        </tr>
+        <br>
+        <tr>
+            <td colspan="2"><input type="text" placeholder="" required style="width: 90%;"></td>
+            <td colspan="2"><input type="text" placeholder="" required style="width: 90%;"></td>
+        </tr>
+
+        <tr>
+            <th class="section-title" colspan="2">DATOS DE ENVIO</th>
+            <th class="section-title" colspan="2"></th>
+            
+        </tr>
+        <br>
+        <tr>
+            <td colspan="2"><strong> Encargado de envío: </strong><input type="text" placeholder="" required style="width: 90%;"></td>
+            <td colspan="2"><strong>Empresa: </strong><input type="text" placeholder="" required style="width: 90%;"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><strong>Número de Identificación:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+            <td colspan="2"><strong>Fecha:</strong> <input type="" required style="width: 90%;"></td>
+        </tr>
+<br>
+        <tr>
+            <th class="section-title" colspan="4">DATOS DE MAQUINARIA A TRASLADAR</th>
+        </tr>
+        <tr>
+            <td><strong>Nombre:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+            <td><strong>Marca:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+            <td><strong>Modelo:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+            <td><strong>Chasis:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>    
+        </tr>
+        <tr>
+            <td><strong>Color:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+            <td><strong>Tipo:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <th class="section-title" colspan="4">DATOS DE CAMIÓN QUE TRASLADARÁ MAQUINARIA</th>
+        </tr>
+        <tr>
+            <td><strong>Placa:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+            <td><strong>Marca:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+            <td><strong>Modelo:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+            <td><strong>Motor:</strong> <input type="text" placeholder="" required style="width: 90%;"></td>
+        </tr>
+
+        <tr>
+            <th class="section-title" colspan="2">GERENTE GENERAL</th>
+            <th class="section-title" colspan="2">NÚMERO DE TELÉFONO</th>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="text" placeholder="" required style="width: 90%;"></td>
+            <td colspan="2"><input type="text" placeholder="" required style="width: 90%;"></td>
+        </tr>
+    </table>
+
+    <div class="signature-section">
+        <br>
+        <br>
+        <br>
+        <br>
+        <p><strong>Firma del Encargado:</strong></p>
+            <br>
+            <br>
+            <br>
+            <span>________________________________</span>
+        </div>
+    </div>
+    </div>
+
+    <div class="actions">
+        <button class="btn" onclick="downloadPDF()">Descargar PDF</button>
+        <button class="btn" onclick="window.location.href='index.html'">Regresar al Menú</button>
+        
+    </div>
+</div>
+
+<script>
+    async function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const container = document.querySelector('.container');
+        
+        const botones = document.querySelectorAll(".btn");
+        botones.forEach(boton => boton.style.display = 'none'); // Ocultar botones
+
+        try {
+            const canvas = await html2canvas(container, { scale: 2 });
+            const imgData = canvas.toDataURL('image/png');
+
+            // Ajustar el tamaño de la imagen
+            const imgWidth = 210; // Ancho en mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width; // Alto ajustado
+
+            // Añadir la marca de agua
+            const watermarkImg = new Image();
+            watermarkImg.src = 'logo.jpg'; // Usar la misma imagen para marca de agua
+            await new Promise(resolve => watermarkImg.onload = resolve);
+            doc.addImage(watermarkImg, 'PNG', 0, 0, imgWidth, imgHeight, undefined, 'NONE', 0.2); // Marca de agua con opacidad
+            doc.addImage(watermarkImg, 'PNG', 0, 0, imgWidth, imgHeight, undefined, 'NONE', 0.2); // Marca de agua con opacidad
+            doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            doc.save('guia_de_envio.pdf');
+        } catch (error) {
+            console.error('Error al generar el PDF:', error);
+        } finally {
+            botones.forEach(boton => boton.style.display = 'block'); // Mostrar botones nuevamente
+        }
+    }
+    document.querySelector('input').addEventListener('click', function() {
+    setTimeout(() => {
+        this.focus();
+    }, 2); // Ajusta el tiempo según sea necesario
+});
+    function nuevaCotizacion() {
+            numeroCotizacion++; // Incrementar el número de cotización
+            // Mostrar número de cotización
+            document.getElementById('tabla').reset(); // Reiniciar el formulario
+        }
+</script>
+</body>
+</html>
