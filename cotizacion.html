@@ -50,7 +50,7 @@
         h2 {
             font-size: 18px;
             font-weight: normal;
-            color: #FFC107;
+            color: #000;
         }
         fieldset {
             border: 1px solid #FFC107;
@@ -100,10 +100,14 @@
         }
         #logo {
             max-width: 150px;
-            margin: auto;
+            margin: relative;
         }
         .negrita {
             font-weight: bold;
+        }
+        .signature-section {
+            margin-top: 40px; /* Espacio para la sección de firma */
+            text-align: center; /* Centrando la sección de firma */
         }
     </style>
     <link rel="icon" href="data:,">
@@ -113,6 +117,7 @@
         <header>
             <img src="logo.jpg" alt="Logo de la Empresa" id="logo">
             <h1>Importadora TransCano</h1>
+            <h2>Venta de maquinaria y servicios mecánicos</h2>
             <p>Cotización N°: <span id="numeroCotizacion">01001</span></p>
         </header>
 
@@ -167,7 +172,14 @@
                 <label for="totalPagar">Total a Pagar:</label>
                 <input type="number" id="totalPagar" placeholder="Total a Pagar" readonly>
             </fieldset>
-
+            <div class="signature-section">
+                <br>
+                <p><strong>Firma del Encargado:</strong></p>
+                    <br>
+                    <br>
+                    <br>
+                    <span>________________________________</span>
+                </div>
             <button type="button" onclick="generarPDF()">Descargar Cotización en PDF</button>
             <button type="button" onclick="nuevaCotizacion()">Agregar Nueva Cotización</button>
             <button type="button" onclick="location.href='index.html'">Regresar al Menú</button>
@@ -224,17 +236,18 @@
                 const imgData = canvas.toDataURL('image/png');
 
                 // Ajustar el tamaño de la imagen
-                const imgWidth = 210; // Ancho en mm
-                const imgHeight = (canvas.height * imgWidth) / canvas.width; // Alto ajustado
+                
+        const imgWidth = 110; // Ajuste de ancho
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        const posX = (210 - imgWidth) / 2; // Centrar horizontalmente
+        const posY = (290 - imgHeight) / 2; // Centrar verticalmente
+
 
                 // Añadir marca de agua
-                const watermarkImg = new Image();
-                watermarkImg.src = 'logo.jpg'; // Usar la misma imagen para marca de agua
-                await new Promise(resolve => watermarkImg.onload = resolve);
-                doc.addImage(watermarkImg, 'PNG', 0, 0, imgWidth, imgHeight, undefined, 'NONE', 0.2); // Marca de agua con opacidad 0.2
-
+        
                 // Añadir la imagen del formulario
-                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                doc.addImage(imgData, 'PNG', posX, posY, imgWidth, imgHeight);
                 doc.save('cotizacion.pdf');
             } catch (err) {
                 console.error('Error al generar el PDF:', err);
