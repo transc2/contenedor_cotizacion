@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar PDF</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div id="formulario">
+        <h1>Cotización</h1>
+        <img src="logo.jpg" alt="Logo" id="logo">
+        <p>Cliente: <input type="text" id="cliente"></p>
+        <p>Fecha: <input type="text" id="fecha"></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-cotizacion">
+                <tr>
+                    <td><input type="text" id="descripcion"></td>
+                    <td><input type="number" id="cantidad"></td>
+                    <td><input type="number" id="precio"></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Total: <span id="total"></span></p>
+    </div>
+
+    <button onclick="generarPDF()">Generar PDF</button>
+
+    <script>
+        async function generarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Capturar el contenido a PDF
+            html2canvas(document.querySelector("#formulario")).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 190; // ancho en mm
+                const pageHeight = doc.internal.pageSize.height; // altura de la página
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // alto ajustado
+                let heightLeft = imgHeight;
+
+                let position = 0;
+
+                doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                doc.save('cotizacion.pdf');
+            }).catch(err => {
+                console.error('Error al generar PDF:', err);
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar PDF</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div id="formulario">
+        <h1>Cotización</h1>
+        <img src="logo.jpg" alt="Logo" id="logo">
+        <p>Cliente: <input type="text" id="cliente"></p>
+        <p>Fecha: <input type="text" id="fecha"></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-cotizacion">
+                <tr>
+                    <td><input type="text" id="descripcion"></td>
+                    <td><input type="number" id="cantidad"></td>
+                    <td><input type="number" id="precio"></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Total: <span id="total"></span></p>
+    </div>
+
+    <button onclick="generarPDF()">Generar PDF</button>
+
+    <script>
+        async function generarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Capturar el contenido a PDF
+            html2canvas(document.querySelector("#formulario")).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+
+                // Ajustar el tamaño de la imagen
+                const imgWidth = 190; // Ancho en mm, ajustado para que no se salga de la página
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // Alto ajustado
+
+                // Centrar la imagen
+                const marginX = (doc.internal.pageSize.width - imgWidth) / 2;
+
+                // Ajustar la posición inicial de la imagen
+                const initialPositionY = 40; // Aumentar el margen superior
+
+                doc.addImage(imgData, 'PNG', marginX, initialPositionY, imgWidth, imgHeight);
+                
+                // Guardar el PDF
+                doc.save('cotizacion.pdf');
+            }).catch(err => {
+                console.error('Error al generar PDF:', err);
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización - TransCano</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <section class="formulario" id="cotizacionContainer">
+        <header>
+            <img src="logo.png" alt="Logo de la Empresa" id="logo">
+            <h1>TransCano</h1>
+            <p>Cotización N°: 01234</p>
+        </header>
+        
+        <h2>Cotización</h2>
+        
+        <form id="cotizacionForm">
+            <fieldset>
+                <legend>Datos del Cliente</legend>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" placeholder="Nombre del cliente" required>
+                <label for="telefono">Teléfono:</label>
+                <input type="text" id="telefono" placeholder="Teléfono" required>
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" placeholder="E-mail" required>
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" placeholder="Dirección" required>
+            </fieldset>
+
+            <fieldset>
+                <legend>Descripción del Servicio</legend>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cant.</th>
+                            <th>Descripción</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicios">
+                        <tr>
+                            <td><input type="number" value="1" onchange="calcularTotal(this)"></td>
+                            <td><input type="text" placeholder="Descripción del servicio" required></td>
+                            <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" required></td>
+                            <td><input type="number" placeholder="Total" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+
+            <fieldset>
+                <legend>Totales</legend>
+                <label for="total">Total:</label>
+                <input type="number" id="total" placeholder="Total" readonly>
+                <label for="impuesto">Impuesto:</label>
+                <input type="number" id="impuesto" placeholder="Impuesto" onchange="calcularTotalPagar()">
+                <label for="totalPagar">Total a Pagar:</label>
+                <input type="number" id="totalPagar" placeholder="Total a Pagar" readonly>
+            </fieldset>
+
+            <button type="button" onclick="generarPDF('cotizacionContainer')">Descargar Cotización en PDF</button>
+            <button type="button" onclick="location.href='index.html'">Regresar al Menú</button>
+        </form>
+    </section>
+
+    <script>
+        async function generarPDF(containerId) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Captura el formulario
+            const container = document.getElementById(containerId);
+            try {
+                const canvas = await html2canvas(container, { scale: 2 });
+                const imgData = canvas.toDataURL('image/png');
+
+                // Ajustar el tamaño de la imagen
+                const imgWidth = 180; // Ancho en mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // Alto ajustado
+
+                // Centrar la imagen
+                const marginX = (doc.internal.pageSize.width - imgWidth) / 2;
+                const initialPositionY = 15; // Aumentar el margen superior para espacio para el logo
+
+                doc.addImage(imgData, 'PNG', marginX, initialPositionY, imgWidth, imgHeight);
+                doc.save('cotizacion.pdf');
+            } catch (err) {
+                console.error('Error al generar PDF:', err);
+            }
+        }
+
+        function calcularTotal(element) {
+            const row = element.closest('tr');
+            const quantity = row.querySelector('input[type="number"]').value;
+            const unitPrice = row.querySelector('input[type="number"]:nth-child(3)').value;
+            const totalInput = row.querySelector('input[type="number"]:nth-child(4)');
+            totalInput.value = quantity * unitPrice;
+            calcularTotalPagar(); // Actualizar total a pagar
+        }
+
+        function calcularTotalPagar() {
+            const totalInputs = document.querySelectorAll('#servicios input[readonly]');
+            let total = 0;
+
+            totalInputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+
+            const impuesto = parseFloat(document.getElementById('impuesto').value) || 0;
+            document.getElementById('total').value = total;
+            document.getElementById('totalPagar').value = total + impuesto;
+        }
+    </script>
+</body>
+</html>
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.formulario {
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 2px solid #000;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+}
+
+.logo {
+    width: 100px; /* Ajusta el tamaño del logo */
+    height: auto;
+}
+
+h1 {
+    color: #ffcc00; /* Color amarillo */
+    font-size: 24px;
+}
+
+.cotizacion-numero {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+fieldset {
+    margin-bottom: 20px;
+}
+
+legend {
+    font-weight: bold;
+    color: #ffcc00; /* Color amarillo */
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #ffcc00; /* Color amarillo */
+}
+
+button {
+    background-color: #ffcc00; /* Color amarillo */
+    color: #000;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #e6b800; /* Color más oscuro al pasar el mouse */
+}
+
+Consideraciones
+Ocultar elementos: Si utilizas display: none; en los elementos que no quieres capturar, html2canvas no los incluirá.
+
+Estilos CSS: Asegúrate de que el CSS esté aplicado correctamente para que el diseño se vea como deseas en el PDF.
+
+Alternativa: Si no te sientes cómodo con html2canvas y jsPDF, considera usar una biblioteca de generación de documentos como pdfmake que permite más control sobre el diseño.
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización - TransCano</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .formulario {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+        }
+        h1, h2 {
+            color: #FFC107;
+        }
+        fieldset {
+            border: 1px solid #FFC107;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        legend {
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #FFC107;
+            padding: 5px;
+            text-align: center;
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #FFC107;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ffca28;
+        }
+        #logo {
+            max-width: 150px;
+            margin: auto;
+        }
+    </style>
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <section class="formulario">
+        <header>
+            <img src="logo.jpg" alt="Logo de la Empresa" id="logo">
+            <h1>TransCano</h1>
+            <p>Cotización N°: 01234</p>
+        </header>
+        
+        <h2>Cotización</h2>
+        
+        <form id="cotizacionForm">
+            <fieldset>
+                <legend>Datos del Cliente</legend>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" placeholder="Nombre del cliente" required>
+                <label for="telefono">Teléfono:</label>
+                <input type="text" id="telefono" placeholder="Teléfono" required>
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" placeholder="E-mail" required>
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" placeholder="Dirección" required>
+            </fieldset>
+
+            <fieldset>
+                <legend>Descripción del Servicio</legend>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cant.</th>
+                            <th>Descripción</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicios">
+                        <tr>
+                            <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                            <td><input type="text" placeholder="Descripción del servicio" required></td>
+                            <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                            <td><input type="number" placeholder="Total" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" onclick="agregarFila()">Agregar Fila</button>
+            </fieldset>
+
+            <fieldset>
+                <legend>Totales</legend>
+                <label for="total">Total:</label>
+                <input type="number" id="total" placeholder="Total" readonly>
+                <label for="impuesto">Impuesto:</label>
+                <input type="number" id="impuesto" placeholder="Impuesto" onchange="calcularTotalPagar()" min="0" step="0.01">
+                <label for="totalPagar">Total a Pagar:</label>
+                <input type="number" id="totalPagar" placeholder="Total a Pagar" readonly>
+            </fieldset>
+
+            <button type="button" id="btnPDF" onclick="generarPDF()">Descargar Cotización en PDF</button>
+            <button type="button" onclick="location.href='index.html'">Regresar al Menú</button>
+        </form>
+    </section>
+
+    <script>
+        function agregarFila() {
+            const tabla = document.getElementById('servicios');
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                <td><input type="text" placeholder="Descripción del servicio" required></td>
+                <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                <td><input type="number" placeholder="Total" readonly></td>
+            `;
+            tabla.appendChild(nuevaFila);
+        }
+
+        function calcularTotal(element) {
+            const row = element.closest('tr');
+            const quantity = row.querySelector('input[type="number"]').value;
+            const unitPrice = row.querySelector('input[placeholder="Precio Unitario"]').value;
+            const totalInput = row.querySelector('input[readonly]');
+            totalInput.value = (quantity * unitPrice).toFixed(2); // Calcular el total de la fila
+            calcularTotalPagar(); // Actualizar total a pagar
+        }
+
+        function calcularTotalPagar() {
+            const totalInputs = document.querySelectorAll('#servicios input[readonly]');
+            let total = 0;
+
+            totalInputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+
+            const impuesto = parseFloat(document.getElementById('impuesto').value) || 0;
+            document.getElementById('total').value = total.toFixed(2); // Formato a dos decimales
+            document.getElementById('totalPagar').value = (total + impuesto).toFixed(2); // Formato a dos decimales
+        }
+        
+        async function generarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Ocultar botones temporalmente
+            document.getElementById('btnPDF').style.display = 'none';
+            const container = document.getElementById('cotizacionForm');
+            
+            try {
+                const canvas = await html2canvas(container, { scale: 2 });
+                const imgData = canvas.toDataURL('image/png');
+
+                // Mostrar los botones después de la captura
+                document.getElementById('btnPDF').style.display = 'inline-block';
+
+                // Ajustar el tamaño de la imagen
+                const imgWidth = doc.internal.pageSize.getWidth(); // Ancho del documento
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // Alto ajustado
+
+                doc.addImage(imgData, 'PNG', 0, 15, imgWidth, imgHeight);
+                doc.save('cotizacion.pdf');
+            } catch (err) {
+                console.error('Error al generar PDF:', err);
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+CORRECTO 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización - TransCano</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .formulario {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #pdf-content {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            background-color: white;
+            margin: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+        }
+        h1, h2 {
+            color: #FFC107;
+        }
+        fieldset {
+            border: 1px solid #FFC107;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        legend {
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #FFC107;
+            padding: 5px;
+            text-align: center;
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #FFC107;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ffca28;
+        }
+        #logo {
+            max-width: 100px;
+            margin: auto;
+        }
+    </style>
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <section class="formulario">
+        <div id="pdf-content">
+            <header>
+                <img src="logo.jpg" alt="Logo de la Empresa" id="logo">
+                <h1>TransCano</h1>
+                <p>Cotización N°: 01234</p>
+            </header>
+            
+            <h2>Cotización</h2>
+            
+            <form id="cotizacionForm">
+                <fieldset>
+                    <legend>Datos del Cliente</legend>
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" placeholder="Nombre del cliente" required>
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" placeholder="Teléfono" required>
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" placeholder="E-mail" required> <br><br>
+                    <label for="direccion">Dirección:</label>
+                  <input type="text" id="direccion" placeholder="Dirección" required>  
+                </fieldset>
+
+                <fieldset>
+                    <legend>Descripción del Servicio</legend>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cant.</th>
+                                <th>Descripción</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="servicios">
+                            <tr>
+                                <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                                <td><input type="text" placeholder="Descripción del servicio" required></td>
+                                <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                                <td><input type="number" placeholder="Total" readonly></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" onclick="agregarFila()">Agregar Fila</button>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Totales</legend>
+                    <label for="total">Total:</label>
+                    <input type="number" id="total" placeholder="Total" readonly>
+                    <label for="impuesto">Impuesto:</label>
+                    <input type="number" id="impuesto" placeholder="Impuesto" onchange="calcularTotalPagar()" min="0" step="0.01">
+                    <label for="totalPagar">Total a Pagar:</label>
+                    <input type="number" id="totalPagar" placeholder="Total a Pagar" readonly>
+                </fieldset>
+            </form>
+        </div>
+        <button type="button" id="btnPDF" onclick="generarPDF()">Descargar Cotización en PDF</button>
+        <button type="button" onclick="location.href='index.html'">Regresar al Menú</button>
+    </section>
+
+    <script>
+        function agregarFila() {
+            const tabla = document.getElementById('servicios');
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                <td><input type="text" placeholder="Descripción del servicio" required></td>
+                <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                <td><input type="number" placeholder="Total" readonly></td>
+            `;
+            tabla.appendChild(nuevaFila);
+        }
+
+        function calcularTotal(element) {
+            const row = element.closest('tr');
+            const quantity = row.querySelector('input[type="number"]').value;
+            const unitPrice = row.querySelector('input[placeholder="Precio Unitario"]').value;
+            const totalInput = row.querySelector('input[readonly]');
+            totalInput.value = (quantity * unitPrice).toFixed(2); // Calcular el total de la fila
+            calcularTotalPagar(); // Actualizar total a pagar
+        }
+
+        function calcularTotalPagar() {
+            const totalInputs = document.querySelectorAll('#servicios input[readonly]');
+            let total = 0;
+
+            totalInputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+
+            const impuesto = parseFloat(document.getElementById('impuesto').value) || 0;
+            document.getElementById('total').value = total.toFixed(2); // Formato a dos decimales
+            document.getElementById('totalPagar').value = (total + impuesto).toFixed(2); // Formato a dos decimales
+        }
+        
+        async function generarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4'); // Ajustar a tamaño A4
+
+            // Ocultar botones temporalmente
+            const botones = document.querySelectorAll("button"); // Seleccionar todos los botones
+            botones.forEach(boton => boton.style.display = 'none'); // Ocultar los botones
+
+            const container = document.getElementById('pdf-content');
+
+            try {
+                const canvas = await html2canvas(container, { scale: 2 });
+                const imgData = canvas.toDataURL('image/png');
+
+                // Mostrar los botones después de la captura
+                botones.forEach(boton => boton.style.display = 'inline-block');
+
+                // Ajustar el tamaño de la imagen al tamaño A4
+                const imgWidth = 210; // Ancho en mm (tamaño A4)
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // Alto ajustado
+
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                doc.save('cotizacion.pdf');
+            } catch (err) {
+                console.error('Error al generar PDF:', err);
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización - Importadora TransCano</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .formulario {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        #pdf-content {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            background-color: white;
+            position: relative;
+        }
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            opacity: 0.1;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        header {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFC107;
+        }
+        h2 {
+            font-size: 18px;
+            font-weight: normal;
+            color: #FFC107;
+        }
+        fieldset {
+            border: 1px solid #FFC107;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+        legend {
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            z-index: 1;
+            position: relative;
+        }
+        th, td {
+            border: 1px solid #FFC107;
+            padding: 5px;
+            text-align: center;
+        }
+        input[type="text"], input[type="email"], input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+        #direccion {
+            width: 100%; /* Caja de texto de dirección más larga */
+        }
+        textarea {
+            width: 100%;
+            resize: vertical; /* Permitir que se ajuste hacia abajo */
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #FFC107;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ffca28;
+        }
+        #logo {
+            max-width: 150px;
+            margin: auto;
+        }
+    </style>
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <section class="formulario">
+        <div id="pdf-content">
+            <header>
+                <img src="logo.jpg" alt="Logo de la Empresa" id="logo">
+                <h1>Importadora TransCano</h1>
+                <h2>Venta de maquinaria y servicio mecánico</h2>
+                <p>Cotización N°: 01234</p>
+            </header>
+            
+            <img src="logo.jpg" class="watermark" alt="Marca de Agua">
+            
+            <h2>Cotización</h2>
+            
+            <form id="cotizacionForm">
+                <fieldset>
+                    <legend>Datos del Cliente</legend>
+                    <div style="display: flex; justify-content: center;">
+                        <div style="text-align: center; width: 70%;">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre" placeholder="Nombre del cliente" required>
+                            <label for="telefono">Teléfono:</label>
+                            <input type="text" id="telefono" placeholder="Teléfono" required>
+                            <label for="email">E-mail:</label>
+                            <input type="email" id="email" placeholder="E-mail" required>
+                            <label for="direccion">Dirección:</label>
+                            <input type="text" id="direccion" placeholder="Dirección" required>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Descripción del Servicio</legend>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cant.</th>
+                                <th>Descripción</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="servicios">
+                            <tr>
+                                <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                                <td><textarea placeholder="Descripción del servicio" required></textarea></td> <!-- Caja de texto ancha -->
+                                <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                                <td><input type="number" placeholder="Total" readonly></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" onclick="agregarFila()">Agregar Fila</button>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Totales</legend>
+                    <label for="total">Total:</label>
+                    <input type="number" id="total" placeholder="Total" readonly>
+                    <label for="impuesto">Impuesto:</label>
+                    <input type="number" id="impuesto" placeholder="Impuesto" onchange="calcularTotalPagar()" min="0" step="0.01">
+                    <label for="totalPagar">Total a Pagar:</label>
+                    <input type="number" id="totalPagar" placeholder="Total a Pagar" readonly>
+                </fieldset>
+            </form>
+        </div>
+        <div style="text-align: center;">
+            <button type="button" id="btnPDF" onclick="generarPDF()">Descargar Cotización en PDF</button>
+            <button type="button" onclick="location.href='index.html'">Regresar al Menú</button>
+        </div>
+    </section>
+
+    <script>
+        function agregarFila() {
+            const tabla = document.getElementById('servicios');
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                <td><textarea placeholder="Descripción del servicio" required></textarea></td>
+                <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                <td><input type="number" placeholder="Total" readonly></td>
+            `;
+            tabla.appendChild(nuevaFila);
+        }
+
+        function calcularTotal(element) {
+            const row = element.closest('tr');
+            const quantity = row.querySelector('input[type="number"]').value;
+            const unitPrice = row.querySelector('input[placeholder="Precio Unitario"]').value;
+            const totalInput = row.querySelector('input[readonly]');
+            totalInput.value = (quantity * unitPrice).toFixed(2); // Calcular el total de la fila
+            calcularTotalPagar(); // Actualizar total a pagar
+        }
+
+        function calcularTotalPagar() {
+            const totalInputs = document.querySelectorAll('#servicios input[readonly]');
+            let total = 0;
+
+            totalInputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+
+            const impuesto = parseFloat(document.getElementById('impuesto').value) || 0;
+            document.getElementById('total').value = total.toFixed(2); // Formato a dos decimales
+            document.getElementById('totalPagar').value = (total + impuesto).toFixed(2); // Formato a dos decimales
+        }
+        
+        async function generarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4'); // Ajustar a tamaño A4
+
+            // Ocultar botones temporalmente
+            const botones = document.querySelectorAll("button"); // Seleccionar todos los botones
+            botones.forEach(boton => boton.style.display = 'none'); // Ocultar los botones
+
+            const container = document.getElementById('pdf-content');
+
+            try {
+                const canvas = await html2canvas(container, { scale: 2 });
+                const imgData = canvas.toDataURL('image/png');
+
+                // Mostrar los botones después de la captura
+                botones.forEach(boton => boton.style.display = 'inline-block');
+
+                // Ajustar el tamaño de la imagen al tamaño A4
+                const imgWidth = 210; // Ancho en mm (tamaño A4)
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // Alto ajustado
+
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                doc.save('cotizacion.pdf');
+            } catch (err) {
+                console.error('Error al generar PDF:', err);
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+SUPER CORRECTO
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización - Importadora TransCano</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .formulario {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        #pdf-content {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            background-color: white;
+            position: relative;
+        }
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px; /* Tamaño de la marca de agua incrementado */
+            opacity: 0.1;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        header {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFC107;
+        }
+        h2 {
+            font-size: 18px;
+            font-weight: normal;
+            color: #FFC107;
+        }
+        fieldset {
+            border: 1px solid #FFC107;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+        legend {
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            z-index: 1;
+            position: relative;
+        }
+        th, td {
+            border: 1px solid #FFC107;
+            padding: 5px;
+            text-align: center;
+        }
+        input[type="text"], input[type="email"], input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+        #direccion {
+            width: 100%; /* Caja de texto de dirección más larga */
+        }
+        textarea {
+            width: 100%;
+            resize: vertical; /* Permitir que se ajuste hacia abajo */
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #FFC107;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ffca28;
+        }
+        #logo {
+            max-width: 150px;
+            margin: auto;
+        }
+        .negrita {
+            font-weight: bold;
+        }
+    </style>
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <section class="formulario">
+        <div id="pdf-content">
+            <header>
+                <img src="logo.jpg" alt="Logo de la Empresa" id="logo">
+                <h1>Importadora TransCano</h1>
+                <h2>Venta de maquinaria y servicio mecánico</h2>
+                <p>Cotización N°: <span id="numCotizacion">01001</span></p>
+            </header>
+            
+            <img src="logo.jpg" class="watermark" alt="Marca de Agua">
+            
+            <h2>Cotización</h2>
+            
+            <form id="cotizacionForm">
+                <fieldset>
+                    <legend>Datos del Cliente</legend>
+                    <div style="display: flex; justify-content: center;">
+                        <div style="text-align: center; width: 70%;">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre" placeholder="Nombre del cliente" required>
+                            <label for="telefono">Teléfono:</label>
+                            <input type="text" id="telefono" placeholder="Teléfono" required>
+                            <label for="email">E-mail:</label>
+                            <input type="email" id="email" placeholder="E-mail" required>
+                            <label for="direccion">Dirección:</label>
+                            <input type="text" id="direccion" placeholder="Dirección" required>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Descripción del Servicio</legend>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cant.</th>
+                                <th>Descripción</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="servicios">
+                            <tr>
+                                <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                                <td><textarea placeholder="Descripción del servicio" required></textarea></td>
+                                <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                                <td><input type="number" class="negrita" placeholder="Total" readonly></td> <!-- Negrita en los totales -->
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" onclick="agregarFila()">Agregar Fila</button>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Totales</legend>
+                    <label for="total" class="negrita">Total:</label>
+                    <input type="number" id="total" class="negrita" placeholder="Total" readonly>
+                    <label for="impuesto" class="negrita">Impuesto:</label>
+                    <input type="number" id="impuesto" placeholder="Impuesto" onchange="calcularTotalPagar()" min="0" step="0.01">
+                    <label for="totalPagar" class="negrita">Total a Pagar:</label>
+                    <input type="number" id="totalPagar" class="negrita" placeholder="Total a Pagar" readonly>
+                </fieldset>
+            </form>
+        </div>
+        <div style="text-align: center;">
+            <button type="button" id="btnPDF" onclick="generarPDF()">Descargar Cotización en PDF</button>
+            <button type="button" onclick="location.href='index.html'">Regresar al Menú</button>
+        </div>
+    </section>
+
+    <script>
+        let numCotizacion = 1001; // Inicializar número de cotización
+
+        function agregarFila() {
+            const tabla = document.getElementById('servicios');
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                <td><textarea placeholder="Descripción del servicio" required></textarea></td>
+                <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                <td><input type="number" class="negrita" placeholder="Total" readonly></td> <!-- Negrita en los totales -->
+            `;
+            tabla.appendChild(nuevaFila);
+        }
+
+        function calcularTotal(element) {
+            const row = element.closest('tr');
+            const quantity = row.querySelector('input[type="number"]').value;
+            const unitPrice = row.querySelector('input[placeholder="Precio Unitario"]').value;
+            const totalInput = row.querySelector('input[readonly]');
+            totalInput.value = (quantity * unitPrice).toFixed(2); // Calcular el total de la fila
+            calcularTotalPagar(); // Actualizar total a pagar
+        }
+
+        function calcularTotalPagar() {
+            const totalInputs = document.querySelectorAll('#servicios input[readonly]');
+            let total = 0;
+
+            totalInputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+
+            const impuesto = parseFloat(document.getElementById('impuesto').value) || 0;
+            document.getElementById('total').value = total.toFixed(2); // Formato a dos decimales
+            document.getElementById('totalPagar').value = (total + impuesto).toFixed(2); // Formato a dos decimales
+        }
+        
+        async function generarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const content = document.getElementById('pdf-content');
+
+            const botones = document.querySelectorAll("button"); // Seleccionar todos los botones
+            botones.forEach(boton => boton.style.display = 'none'); // Ocultar los botones
+            
+            const canvas = await html2canvas(content);
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 210; // Ancho del PDF
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            
+            // Guardar el PDF con el número de cotización
+            const numeroCotizacion = `Cotización_0${numCotizacion++}`;
+            document.getElementById('numCotizacion').innerText = numeroCotizacion;
+            doc.save(`${numeroCotizacion}.pdf`);
+        }
+    </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización - TransCano</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .formulario {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+        }
+        h1, h2 {
+            color: #FFC107;
+        }
+        fieldset {
+            border: 1px solid #FFC107;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        legend {
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #FFC107;
+            padding: 5px;
+            text-align: center;
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: #FFC107;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ffca28;
+        }
+        #logo {
+            max-width: 200px; /* Aumenta el tamaño del logo */
+            margin: auto;
+        }
+        /* Responsive */
+        @media (max-width: 600px) {
+            .formulario {
+                padding: 10px;
+            }
+            button {
+                width: 100%;
+                padding: 12px;
+            }
+            input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <section class="formulario">
+        <header>
+            <img src="logo.jpg" alt="Logo de la Empresa" id="logo">
+            <h1>Importadora TransCano</h1>
+            <p>Cotización N°: <span id="numeroCotizacion">01001</span></p>
+        </header>
+        
+        <h2>Cotización</h2>
+        
+        <form id="cotizacionForm">
+            <fieldset>
+                <legend>Datos del Cliente</legend>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" placeholder="Nombre del cliente" required>
+                <label for="telefono">Teléfono:</label>
+                <input type="text" id="telefono" placeholder="Teléfono" required>
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" placeholder="E-mail" required>
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" placeholder="Dirección" required>
+            </fieldset>
+
+            <fieldset>
+                <legend>Descripción del Servicio</legend>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cant.</th>
+                            <th>Descripción</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicios">
+                        <tr>
+                            <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                            <td><input type="text" placeholder="Descripción del servicio" required></td>
+                            <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                            <td><input type="number" placeholder="Total" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" onclick="agregarFila()">Agregar Fila</button>
+            </fieldset>
+
+            <fieldset>
+                <legend>Totales</legend>
+                <label for="total">Total:</label>
+                <input type="number" id="total" placeholder="Total" readonly>
+                <label for="impuesto">Impuesto:</label>
+                <input type="number" id="impuesto" placeholder="Impuesto" onchange="calcularTotalPagar()" min="0" step="0.01">
+                <label for="totalPagar">Total a Pagar:</label>
+                <input type="number" id="totalPagar" placeholder="Total a Pagar" readonly>
+            </fieldset>
+
+            <button type="button" onclick="generarPDF()">Descargar Cotización en PDF</button>
+            <button type="button" onclick="nuevaCotizacion()">Agregar Nueva Cotización</button>
+            <button type="button" onclick="location.href='index.html'">Regresar al Menú</button>
+        </form>
+    </section>
+
+    <script>
+        let numeroCotizacion = 1001; // Inicializar el número de cotización
+
+        function agregarFila() {
+            const tabla = document.getElementById('servicios');
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td><input type="number" value="1" onchange="calcularTotal(this)" min="1" required></td>
+                <td><input type="text" placeholder="Descripción del servicio" required></td>
+                <td><input type="number" placeholder="Precio Unitario" onchange="calcularTotal(this)" min="0" step="0.01" required></td>
+                <td><input type="number" placeholder="Total" readonly></td>
+            `;
+            tabla.appendChild(nuevaFila);
+        }
+
+        function calcularTotal(element) {
+            const row = element.closest('tr');
+            const quantity = row.querySelector('input[type="number"]').value;
+            const unitPrice = row.querySelector('input[type="number"]:nth-child(3)').value;
+            const totalInput = row.querySelector('input[type="number"]:nth-child(4)');
+            totalInput.value = quantity * unitPrice;
+            calcularTotalPagar(); // Actualizar total a pagar
+        }
+
+        function calcularTotalPagar() {
+            const totalInputs = document.querySelectorAll('#servicios input[readonly]');
+            let total = 0;
+
+            totalInputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+
+            const impuesto = parseFloat(document.getElementById('impuesto').value) || 0;
+            document.getElementById('total').value = total;
+            document.getElementById('totalPagar').value = total + impuesto;
+        }
+        
+        async function generarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const container = document.querySelector('.formulario');
+            try {
+                const canvas = await html2canvas(container, { scale: 2 });
+                const imgData = canvas.toDataURL('image/png');
+
+                const imgWidth = 210; // Ancho en mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // Alto ajustado
+
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                doc.save('cotizacion.pdf');
+            } catch (err) {
+                console.error('Error al generar PDF:', err);
+            }
+        }
+
+        function nuevaCotizacion() {
+            numeroCotizacion++; // Incrementar el número de cotización
+            document.getElementById('numeroCotizacion').textContent = String(numeroCotizacion).padStart(5, '0'); // Mostrar con ceros a la izquierda
+            document.getElementById('cotizacionForm').reset(); // Limpiar el formulario
+            const totalInputs = document.querySelectorAll('#servicios input[readonly]');
+            totalInputs.forEach(input => input.value = ''); // Limpiar totales
+            calcularTotalPagar(); // Actualizar total a pagar
+        }
+    </script>
+</body>
+</html>
